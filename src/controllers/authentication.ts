@@ -33,7 +33,7 @@ export const login = async (req: Request, res: Response) => {
     );
     await user.save();
 
-    res.cookie("B2B-ECOMMERCE-AUTH", user.authentication.sessionToken, {
+    res.cookie(process.env.SECRET, user.authentication.sessionToken, {
       domain: "localhost",
       path: "/",
     });

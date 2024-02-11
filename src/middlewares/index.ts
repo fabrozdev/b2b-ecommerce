@@ -32,7 +32,7 @@ export const isAuthenticated = async (
   next: express.NextFunction
 ) => {
   try {
-    const sessionToken = req.cookies["B2B-ECOMMERCE-AUTH"];
+    const sessionToken = req.cookies[process.env.SECRET];
     if (!sessionToken) {
       return res.sendStatus(403);
     }
