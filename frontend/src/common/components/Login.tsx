@@ -5,13 +5,13 @@ import {
   FormControlLabel,
   TextField,
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "tss-react/mui";
 import Typography from "@mui/material/Typography";
 import background from "@/assets/loginimage.webp";
-import { useState } from "react";
+import { SyntheticEvent, useState } from "react";
 import { useAuth } from "@/common/hooks/useAuth.tsx";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   imageBox: {
     width: "55%",
     height: "100%",
@@ -29,16 +29,16 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const AuthLayout = () => {
-  const classes = useStyles();
+const Login = () => {
+  const { classes } = useStyles();
   const { signIn } = useAuth();
   const [email, setEmail] = useState<string | undefined>(undefined);
   const [password, setPassword] = useState<string | undefined>(undefined);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     if (email && password) {
-      const result = await signIn({ email, password });
+      await signIn({ email, password });
     }
   };
   return (
@@ -99,4 +99,4 @@ const AuthLayout = () => {
   );
 };
 
-export default AuthLayout;
+export default Login;

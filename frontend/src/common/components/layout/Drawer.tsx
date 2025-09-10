@@ -10,7 +10,10 @@ import MailIcon from "@mui/icons-material/Mail";
 import ListItemText from "@mui/material/ListItemText";
 import { CSSObject, styled, Theme } from "@mui/material/styles";
 import MuiDrawer from "@mui/material/Drawer";
-import { DRAWER_WIDTH } from "@/common/components/Header.tsx";
+import { DRAWER_WIDTH } from "@/common/components/layout/Header.tsx";
+import navigationConfig from "@/configs/navigation.config.ts";
+import navigationIcon from "@/configs/navigation-icon.config.tsx";
+import { Link } from "react-router-dom";
 
 type AppDrawerProps = {
   open: boolean;
@@ -42,6 +45,7 @@ export const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "flex-end",
+  height: "20px",
   padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
@@ -75,27 +79,31 @@ export const AppDrawer = (props: AppDrawerProps) => {
       </DrawerHeader>
       <Divider />
       <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem key={text} disablePadding sx={{ display: "block" }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: open ? "initial" : "center",
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
+        {navigationConfig.map(({ key, path, isExternalLink, title, icon }) => (
+          <Link to={path} target={isExternalLink ? "_blank" : ""}>
+            <ListItem key={key} disablePadding sx={{ display: "block" }}>
+              <ListItemButton
                 sx={{
-                  minWidth: 0,
-                  mr: open ? 3 : "auto",
-                  justifyContent: "center",
+                  minHeight: 48,
+                  justifyContent: open ? "initial" : "center",
+                  px: 2.5,
                 }}
               >
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-            </ListItemButton>
-          </ListItem>
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : "auto",
+                    justifyContent: "center",
+                    fontSize: "1.5rem",
+                    color: "black",
+                  }}
+                >
+                  {navigationIcon[icon]}
+                </ListItemIcon>
+                <ListItemText primary={title} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+          </Link>
         ))}
       </List>
       <Divider />

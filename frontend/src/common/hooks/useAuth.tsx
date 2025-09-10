@@ -1,5 +1,10 @@
-import axios from "axios";
-import { useState } from "react";
+import { useLoginMutation } from "@/api/authentication";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  authenticationActions,
+  AuthenticationSelector,
+} from "@/features/authentication/store/authenticationSlice.ts";
+import Snackbar from "@/common/toast/Snackbar.tsx";
 
 type SignInCredentials = {
   email: string;
@@ -7,21 +12,31 @@ type SignInCredentials = {
 };
 
 export const useAuth = () => {
-  const [authenticated, setAuthenticated] = useState(false);
-  const signIn = async (values: SignInCredentials) => {
-    const { status } = await axios.post(
-      "http://localhost:6000/auth/login",
-      values,
-    );
+  const dispatch = useDispatch();
+  const authentication = useSelector(AuthenticationSelector);
+  const [login, { isLoading, error }] = useLoginMutation();
 
-    if (status >= 200) {
-      setAuthenticated(true);
+  const signIn = async (credentials: SignInCredentials) => {
+    try {
+      await login(credentials).unwrap();
+      dispatch(
+        authenticationActions.loginSuccessfulAction({
+          sessionToken: "",
+          username: "",
+          _id: "",
+          email: "",
+        }),
+      );
+    } catch (e) {
+      console.log(error);
+      Snackbar.error("Errore: " + error);
     }
   };
   const signOut = () => {};
 
   return {
-    authenticated,
+    authenticated: authentication.authenticated,
+    isLoading,
     signIn,
     signOut,
   };
